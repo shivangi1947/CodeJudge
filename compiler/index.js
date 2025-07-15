@@ -5,7 +5,7 @@ const {generateInputFile} = require("./generateInputFile");
 const {executecpp} = require("./executecpp");
 const cors = require("cors");
 
-const PORT=8000;
+const PORT=process.env.PORT;
 
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON

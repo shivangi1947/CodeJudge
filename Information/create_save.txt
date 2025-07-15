@@ -1,0 +1,6 @@
+| Method                       | Uses `.save()` under the hood? | Appears in DB? |
+| ---------------------------- | ------------------------------ | -------------- |
+| `await new User(...).save()` | Yes                            | ✅ Yes          |
+| `await User.create(...)`     | Yes (automatically)            | ✅ Yes          |
+
+can do any of these

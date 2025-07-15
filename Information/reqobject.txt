@@ -1,0 +1,10 @@
+| Property      | Description                                                                     |
+| ------------- | ------------------------------------------------------------------------------- |
+| `req.body`    | Data sent in the body of the request (usually from forms or JSON in POST/PUT)   |
+| `req.params`  | Route parameters (e.g., `/user/:id`)                                            |
+| `req.query`   | Query string (e.g., `/search?term=book`)                                        |
+| `req.headers` | HTTP headers sent with the request                                              |
+| `req.cookies` | Cookies sent by the client (if `cookie-parser` middleware is used)              |
+| `req.user`    | 🚨 **Custom property** — typically used to store user info after authentication |
+| `req.method`  | HTTP method (e.g., `GET`, `POST`)                                               |
+| `req.url`     | Full URL of the request                                                         |

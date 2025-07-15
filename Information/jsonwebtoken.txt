@@ -1,0 +1,120 @@
+Great question, Shivangi! Let's break down **JSON Web Tokens (JWTs)** in a simple, developer-friendly way.
+
+---
+
+## 🔐 What is a JSON Web Token (JWT)?
+
+A **JWT** is a **compact, secure way of transmitting information between two parties (usually client and server) as a JSON object**.
+
+It’s mostly used for:
+
+* 🔑 **Authentication** (e.g., login sessions)
+* ✅ **Authorization** (e.g., "is this user an admin?")
+* 📦 **Passing user data securely** without storing sessions on the server (stateless auth)
+
+---
+
+## 🧱 Structure of a JWT
+
+A JWT looks like this:
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.
+eyJ1c2VybmFtZSI6InNoaXZhbmdpIiwiaWQiOjEyM30
+.
+jJ5_tIpG6rwZoCgmKHpe5JZaRm5V_jk2zv-NLwrgDHQ
+```
+
+It has **3 parts**, separated by dots:
+
+1. **Header** – Metadata about the token and the algorithm used.
+2. **Payload** – The actual data (e.g., `username`, `id`, etc.).
+3. **Signature** – Verifies that the token is valid and hasn’t been tampered with.
+
+---
+
+## ⚙️ How JWT works in Authentication
+
+Here’s a typical flow:
+
+### 1. 🧍‍♀️ User logs in
+
+```js
+// Client sends login info
+POST /login
+{
+  "username": "shivangi",
+  "password": "1234"
+}
+```
+
+### 2. ✅ Server verifies credentials
+
+If the username & password are valid:
+
+* The server creates a **JWT** with user info (e.g., `username`, `id`, `role`)
+* It signs it with a **secret key**
+* Sends it back to the client
+
+```js
+const jwt = require('jsonwebtoken');
+
+const token = jwt.sign(
+  { id: user.id, username: user.username }, 
+  'secret123',         // secret key
+  { expiresIn: '1h' }   // optional expiry
+);
+```
+
+### 3. 📦 Client stores the token
+
+Usually in:
+
+* `localStorage`
+* `sessionStorage`
+* or as a cookie
+
+```js
+localStorage.setItem('token', token);
+```
+
+### 4. 🔒 Client includes token in future requests
+
+When calling protected routes:
+
+```http
+GET /dashboard
+Authorization: Bearer eyJhbGciOi...
+```
+
+### 5. 🔍 Server verifies token
+
+```js
+const decoded = jwt.verify(token, 'secret123');
+// if valid, proceed
+```
+
+If it’s invalid or expired → reject request (401 Unauthorized).
+
+---
+
+## ✅ Why JWT is useful
+
+* **Stateless**: Server doesn’t need to store session data.
+* **Portable**: Token contains all the necessary data.
+* **Secure**: Cannot be tampered with (if secret is kept safe).
+* **Expires**: Can automatically expire after 1h, 1d, etc.
+
+---
+
+## 🚨 JWT Security Tips
+
+* Always use **HTTPS**
+* Store tokens securely (avoid `localStorage` if you're worried about XSS)
+* Keep the **secret key** private on the server
+* Use **short expiry times** and refresh tokens if needed
+
+---
+
+Would you like a working example using Node.js + Express + JWT for login? I can show you step-by-step.

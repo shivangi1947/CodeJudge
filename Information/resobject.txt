@@ -1,0 +1,12 @@
+| Property/Method     | Description                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| `res.send()`        | Sends a plain text, JSON, or HTML response and ends the request.                              |
+| `res.json()`        | Sends a JSON response. Equivalent to `res.send()` but auto sets header to `application/json`. |
+| `res.status()`      | Sets the HTTP status code (e.g., 200, 404, 500). Chainable.                                   |
+| `res.render()`      | Renders a view (e.g., EJS, Pug) and sends HTML to the client.                                 |
+| `res.redirect()`    | Redirects to another URL.                                                                     |
+| `res.set()`         | Sets response headers.                                                                        |
+| `res.cookie()`      | Sets a cookie (if `cookie-parser` is used).                                                   |
+| `res.clearCookie()` | Clears a cookie.                                                                              |
+| `res.locals`        | An object passed to views when rendering. Useful for passing global data.                     |
+| `res.end()`         | Ends the response process (used for streams or low-level handling).                           |

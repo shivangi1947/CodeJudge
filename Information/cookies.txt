@@ -1,0 +1,86 @@
+Excellent question — this is something every backend developer must understand clearly.
+
+---
+
+## 🍪 What are Cookies?
+
+**Cookies** are small pieces of data that the server asks the browser to store. They’re sent along with every request to the same server, and they’re often used for:
+
+* **Maintaining sessions** (e.g., staying logged in)
+* **Storing small amounts of user data**
+* **Authentication (e.g., storing JWTs)**
+
+---
+
+## 🔐 If You're Already Using `jsonwebtoken`, Why Use Cookies?
+
+### ✅ Using JWT with Cookies helps manage **authentication** more easily, **especially for browser-based apps**.
+
+Let’s break it down:
+
+---
+
+### 🔁 **Two Common Ways to Store JWTs on Client Side:**
+
+| Method                            | Stored In                        | Pros                           | Cons                                                  |
+| --------------------------------- | -------------------------------- | ------------------------------ | ----------------------------------------------------- |
+| **LocalStorage / SessionStorage** | `window.localStorage`            | Easy to use in frontend JS     | Susceptible to **XSS** (Cross-Site Scripting) attacks |
+| **Cookies (HTTP-only)**           | Automatically managed by browser | More secure (resistant to XSS) | Susceptible to CSRF unless properly configured        |
+
+---
+
+## 🧠 Why Use Cookies (with JWT)?
+
+### ✅ Reason 1: **Automatic Handling**
+
+The browser automatically sends cookies with every request to your server (you don’t need to attach JWT manually in headers).
+
+```js
+res.cookie("token", token, {
+  httpOnly: true, // cannot be accessed via JS (prevents XSS)
+  secure: true,   // only sent over HTTPS
+});
+```
+
+### ✅ Reason 2: **Security**
+
+* If your cookie is:
+
+  * `httpOnly`: cannot be accessed via JavaScript → **XSS protection**
+  * `secure`: only sent over HTTPS
+  * `SameSite: "Strict"`: helps prevent CSRF
+
+You can make token handling **much more secure** than localStorage.
+
+---
+
+### ❌ Why NOT use cookies?
+
+In some **mobile apps** or **pure REST APIs** (not tied to a browser), it’s more flexible to use JWTs via **Authorization headers**:
+
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+## ✅ When to Use What?
+
+| Use Case                           | Best Practice                                         |
+| ---------------------------------- | ----------------------------------------------------- |
+| Traditional website (HTML + forms) | **Cookies with JWTs** (secure, httpOnly)              |
+| SPA (React, Vue, etc.)             | JWT in **Authorization header** OR **secure cookies** |
+| Mobile apps / APIs                 | JWT in **Authorization header**                       |
+
+---
+
+## 🔚 Summary
+
+* JWT = token format
+* Cookie = storage/delivery method
+* You can **store JWT inside a cookie** → to get **best of both worlds**
+* Especially in web apps, cookies make authentication simpler and more secure when set up correctly.
+
+---
+
+Would you like a code example of using JWT with cookies (`httpOnly`) in Express?
