@@ -1,5 +1,17 @@
-node modules
-.env
+# node_modules
+**/node_modules/
+
+# build artifacts
+frontend/build/
+frontend/dist/
+compiler/submissions/
+
+# logs
+*.log
+
+# env files
+*.env
+
 inputs
 codes
 outputs
