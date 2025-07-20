@@ -15,7 +15,7 @@ const SubmissionSchema = new mongoose.Schema({
 
   language: {
     type: String,
-    enum: ['C++', 'Java', 'Python', 'JavaScript'],
+    enum: ['cpp', 'Java', 'Python', 'JavaScript'],
     required: true
   },
 
@@ -30,10 +30,7 @@ const SubmissionSchema = new mongoose.Schema({
     default: 'Pending'
   },
 
-  submittedAt: {
-    type: Date,
-    default: Date.now
-  }
+  
 }, {
   timestamps: true // includes createdAt & updatedAt
 });

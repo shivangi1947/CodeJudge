@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllProblems, getProblemById,createProblem,updateProblem,deleteProblem} = require('../controllers/problem');
-
+//const verifyToken = require('../middleware/verifyToken');
 
 router.get('/', getAllProblems);//done
 router.get('/:id', getProblemById);//done

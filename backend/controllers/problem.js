@@ -35,57 +35,40 @@ exports.getProblemById = async (req, res) => {
 
 exports.createProblem = async (req, res) => 
 {
-  try 
-  {
+  try {
     const {
       title,
       statement,
-      sampleInput,
-      sampleOutput,
+      testCases,
       constraints,
       difficulty,
       tags
     } = req.body;
 
-    
-    if (!title || !statement || !sampleInput || !sampleOutput || !constraints || !difficulty) {
+    if (!title || !statement || !testCases || !constraints || !difficulty) {
       return res.status(400).json({ message: "All required fields must be filled" });
     }
 
-   
     const newProblem = new Problem({
       title,
       statement,
-      sampleInput,
-      sampleOutput,
+      testCases,
       constraints,
       difficulty,
       tags
     });
 
     await newProblem.save();
-//     new Problem({...}):
-// Creates a JavaScript object in memory
 
-// It's not yet stored in MongoDB
-
-//  await newProblem.save():
-// Sends that object to MongoDB
-
-// Inserts it as a new document
-
-// Awaits DB confirmation
     res.status(201).json(newProblem);
   } 
   
   catch (err) 
   {
+    console.log("❌ Error creating problem:", err);
     res.status(500).json({ message: "Failed to create problem", error: err.message });
   }
-
 };
-
-
 
 exports.updateProblem = async (req, res) => 
 {

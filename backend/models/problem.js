@@ -13,16 +13,13 @@ const ProblemSchema = new mongoose.Schema({
     required: true
   },
 
-  sampleInput: {
-    type: [String], // Array of input strings
-    required: true
-  },
-
-  sampleOutput: {
-    type: [String], // Array of output strings
-    required: true
-  },
-
+  testCases: [
+  {
+    input: String,
+    expectedOutput: String
+  }
+]
+,
   constraints: {
     type: String,
     required: true
