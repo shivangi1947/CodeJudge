@@ -10,7 +10,7 @@ const Logout = () => {
     const logoutUser = async () => {
       try {
         // Call your backend logout endpoint
-        await axios.post("http://localhost:5000/api/auth/logout");
+        await axios.post("/api/auth/logout");
 
         // Clear frontend storage
         localStorage.removeItem("token");

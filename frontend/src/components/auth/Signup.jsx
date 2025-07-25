@@ -27,7 +27,7 @@ const Signup = () => {
     setError("");
     try 
     {
-      const res = await axios.post("http://localhost:5000/api/auth/register", formData);//is path ko data bhej do
+      const res = await axios.post("/api/auth/register", formData);//is path ko data bhej do
       localStorage.setItem("token", res.data.token); 
       localStorage.setItem("userId", res.data.userId);
       navigate("/");//home pe navigate kar jao

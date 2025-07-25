@@ -56,7 +56,7 @@ int main() {
     const userId = localStorage.getItem("userId");
    
    try {
-    const response = await axios.post('http://localhost:5000/api/submissions/submit', {
+    const response = await axios.post('/api/submissions/submit', {
       code,
       language: 'cpp',
       problemId: id, 

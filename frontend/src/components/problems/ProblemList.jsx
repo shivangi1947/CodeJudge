@@ -17,7 +17,7 @@ const ProblemList = () => {
 
     const fetchProblems = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/problems");
+        const res = await axios.get("/api/problems");
         setProblems(res.data);
       } 
       

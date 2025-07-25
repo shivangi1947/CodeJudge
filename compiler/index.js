@@ -4,12 +4,17 @@ const {generateFilePath} = require("./generateFilePath");
 const {generateInputFile} = require("./generateInputFile");
 const {executecpp} = require("./executecpp");
 const cors = require("cors");
+require('dotenv').config();
 
-const PORT=process.env.PORT;
+const PORT=process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON
 app.use(express.urlencoded({ extended: true })); // supports form-data (x-www-form-urlencoded)
+
+app.get("/", (req, res) => {
+  res.send("Compiler backend is running ");
+});
 
 
 app.post("/run", async (req, res) => 
@@ -63,8 +68,6 @@ app.post("/run", async (req, res) =>
 });
 
 
-app.listen(PORT,()=>
-{
-    console.log(`Server is running on ${PORT}`);
-    //console.log(__dirname);
+app.listen(5000, '0.0.0.0', () => {
+  console.log("Server running on 0.0.0.0:5000");
 });
