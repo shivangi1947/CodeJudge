@@ -10,7 +10,7 @@ const Logout = () => {
     const logoutUser = async () => {
       try {
         // Call your backend logout endpoint
-        await axios.post("/api/auth/logout");
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`);
 
         // Clear frontend storage
         localStorage.removeItem("token");
