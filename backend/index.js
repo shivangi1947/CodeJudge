@@ -14,7 +14,13 @@ const submissionRoutes = require('./routes/submission');
 connectDB();
 
 // Middleware
-app.use(cors({origin: "http://localhost:5173", credentials: true }));
+app.use(cors({
+  origin: function (origin, callback) {
+    callback(null, origin);  // reflect the request origin
+  },
+  credentials: true
+}));
+
 app.use(express.json()); // Parses incoming JSON
 app.use(express.urlencoded({ extended: true })); // supports form-data (x-www-form-urlencoded)
 app.use(cookieParser()); //  enables req.cookies
