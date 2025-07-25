@@ -34,7 +34,7 @@ int main() {
     try 
     
     {
-        const response = await axios.post('http://localhost:5000/api/submissions/run', {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/submissions/run`, {
         code,
         language: 'cpp',
         problemId: id,
@@ -56,7 +56,7 @@ int main() {
     const userId = localStorage.getItem("userId");
    
    try {
-    const response = await axios.post('/api/submissions/submit', {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/submissions/submit`, {
       code,
       language: 'cpp',
       problemId: id, 
@@ -83,7 +83,7 @@ int main() {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const res = await axios.get(`/api/problems/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/problems/${id}`);
        
         setProblem(res.data);
       } catch (err) {

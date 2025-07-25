@@ -9,7 +9,7 @@ const UserSubmissions = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const res = await axios.get(`/api/submissions/user/${userId}/problem/${problemId}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/submissions/user/${userId}/problem/${problemId}`);
         setSubmissions(res.data);
       } catch (err) {
         console.error("Error fetching submissions:", err);

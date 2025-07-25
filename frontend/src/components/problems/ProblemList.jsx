@@ -17,7 +17,7 @@ const ProblemList = () => {
 
     const fetchProblems = async () => {
       try {
-        const res = await axios.get("/api/problems");
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/problems`);
         setProblems(res.data);
       } 
       
