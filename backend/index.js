@@ -23,14 +23,16 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Check if the incoming origin is in our allowed list
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  credentials: true // <-- ADD THIS LINE
 }));
+
+
 app.use(express.json()); // Parses incoming JSON
 app.use(express.urlencoded({ extended: true })); // supports form-data (x-www-form-urlencoded)
 app.use(cookieParser()); //  enables req.cookies
