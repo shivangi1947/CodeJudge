@@ -16,11 +16,21 @@ const commentRoutes = require('./routes/comment');
 connectDB();
 
 // Middleware
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://code-judge-eight.vercel.app'
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    // Check if the incoming origin is in our allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.json()); // Parses incoming JSON
 app.use(express.urlencoded({ extended: true })); // supports form-data (x-www-form-urlencoded)
 app.use(cookieParser()); //  enables req.cookies
