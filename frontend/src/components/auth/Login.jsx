@@ -1,85 +1,170 @@
-// src/components/auth/Login.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import { useNavigate, Link } from "react-router-dom";
+import { LogIn, Eye, EyeOff, Code, User, KeyRound } from "lucide-react";
+import Navbar from "../layout/Navbar"; // Corrected path to layout folder
+import { motion } from "framer-motion";
 
 const Login = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
 
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+    const handleChange = (e) => {
+        setFormData((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
 
-  try 
-{
-    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, formData);
-    
-    const token = res.data.token;
-    const userId = res.data.userId; 
+        try {
+            // This request tells the browser to include credentials (like cookies)
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, 
+                formData,
+                { withCredentials: true }
+            );
 
-      localStorage.setItem("token", res.data.token); 
-      localStorage.setItem("userId", res.data.userId);
+            // The backend now sets an httpOnly cookie, so we don't handle the token here.
+            // We just need to save the userId.
+            localStorage.setItem("userId", res.data.userId);
+            localStorage.setItem("isAdmin", res.data.isAdmin);
+            navigate("/");
+            window.location.reload();
+        } catch (err) {
+            console.error("Login failed:", err);
+            setError(err.response?.data?.message || "Invalid email or password.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    console.log("User ID:", userId); 
+    // Animation variants for the form container
+    const containerVariants = {
+        hidden: { opacity: 0, y: 30, scale: 0.98 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                when: "beforeChildren",
+                staggerChildren: 0.1,
+                duration: 0.4,
+                ease: "easeOut",
+            },
+        },
+    };
 
-    navigate("/"); // redirect to home
-  } 
-  catch (err) 
-  {
-    console.log(err);
-    setError(err.response?.data?.message || "Invalid credentials");
-  }
-};
+    // Animation variants for individual form items
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+    };
 
+    return (
+        <div className="relative min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-slate-900 dark:to-black text-slate-800 dark:text-white transition-colors duration-300 overflow-hidden">
+            
 
-  return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2 className="login-title">Login</h2>
+            {/* Floating background elements for visual consistency */}
+            <div className="absolute top-1/4 -left-16 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-pulse"></div>
+            <div className="absolute bottom-1/4 -right-16 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-pulse animation-delay-4000"></div>
 
-        {error && <div className="login-error">{error}</div>}
+            <div className="relative flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12 sm:px-6 lg:px-8">
+                <div className="w-full max-w-md space-y-8">
+                    <motion.form
+                        className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 rounded-2xl shadow-2xl p-8 space-y-6"
+                        onSubmit={handleSubmit}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <motion.div variants={itemVariants} className="text-center">
+                            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                                Welcome Back
+                            </h2>
+                            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                Don't have an account?{" "}
+                                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">
+                                    Sign up
+                                </Link>
+                            </p>
+                        </motion.div>
+                        
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm flex items-center gap-3" role="alert"
+                            >
+                                <span className="font-bold">Error:</span>
+                                <span>{error}</span>
+                            </motion.div>
+                        )}
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="login-input"
-        />
+                        <motion.div variants={itemVariants} className="space-y-4">
+                            <div className="relative">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                                <input
+                                    id="email" name="email" type="email" autoComplete="email" required autoFocus
+                                    className="w-full pl-10 p-3 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white border border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 transition"
+                                    placeholder="Email address" value={formData.email} onChange={handleChange}
+                                />
+                            </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="login-input"
-        />
+                            <div className="relative">
+                                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                                <input
+                                    id="password" name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password" required
+                                    className="w-full pl-10 p-3 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white border border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 transition"
+                                    placeholder="Password" value={formData.password} onChange={handleChange}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
+                        </motion.div>
+                        
+                        <motion.div variants={itemVariants} className="text-right text-sm">
+                            <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">
+                                Forgot Password?
+                            </Link>
+                        </motion.div>
 
-        <button type="submit" className="login-button">
-          Login
-        </button>
-      </form>
-    </div>
-  );
+                        <motion.div variants={itemVariants}>
+                            <button
+                                type="submit" disabled={loading}
+                                className="group relative flex w-full justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-500 to-violet-500 dark:from-emerald-500 dark:to-blue-500 py-3 px-4 font-semibold text-white shadow-lg hover:shadow-blue-500/30 dark:hover:shadow-emerald-500/30 transition-all transform hover:scale-105 disabled:opacity-70 disabled:scale-100 disabled:cursor-not-allowed hover:bg-gradient-to-l"
+                            >
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <LogIn className={`h-5 w-5 ${loading ? 'animate-pulse' : ''}`} />
+                                </span>
+                                {loading ? "Signing in..." : "Sign in"}
+                            </button>
+                        </motion.div>
+                    </motion.form>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Login;

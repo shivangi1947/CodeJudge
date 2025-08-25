@@ -2,3 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- Add this to your index.css file --- */
+/* --- Add or replace these styles in your index.css file --- */
+
+/* React Calendar Heatmap Styles */
+.react-calendar-heatmap .color-empty {
+  fill: #ebedf0; /* Light grey for empty cells in light mode */
+}
+
+/* Styles for dark mode */
+.dark .react-calendar-heatmap .color-empty {
+  fill: #2d333b; /* Darker grey for empty cells in dark mode */
+}
+
+/* Green scale for submission days, matching the GitHub style */
+.react-calendar-heatmap .color-scale-1 { fill: #9be9a8; }
+.react-calendar-heatmap .color-scale-2 { fill: #40c463; }
+.react-calendar-heatmap .color-scale-3 { fill: #30a14e; }
+.react-calendar-heatmap .color-scale-4 { fill: #216e39; }
+
+.react-calendar-heatmap-month-label {
+  transform: translateX(4px); /* Pushes each month label slightly to the right */
+}
+
+/* Optional: Adds a bit more padding around the whole chart if needed */
+.react-calendar-heatmap {
+  padding: 5px;
+}

@@ -39,6 +39,8 @@ exports.register = async (req, res) => {
 };
 
 
+// In controllers/auth.js
+
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -49,20 +51,26 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
 
-    // Generate JWT
+    // Generate the JWT
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
 
-    // Set cookie
+    // Set the token as a secure, httpOnly cookie
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      httpOnly: true, // Crucial: Prevents JavaScript from accessing the cookie
+      secure: process.env.NODE_ENV === 'production', // Send only over HTTPS in production
+      sameSite: 'strict', // Helps prevent CSRF attacks
+      maxAge: 7 * 24 * 60 * 60 * 1000 // Cookie expires in 7 days
     });
 
-    res.json({ message: 'Login successful', userId:user._id});
+    // The token is no longer sent in the response body
+    res.status(200).json({
+    message: "Login successful",
+    userId: user._id,
+    isAdmin: user.role === 'admin' // e.g., true or false
+});
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -79,6 +87,21 @@ exports.getUserById = async (req, res) => {
     res.json(user);
   } catch (err) {
     return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Add this new function to your controllers/auth.js file
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    // req.user.id is added by the verifyToken middleware
+    const user = await User.findById(req.user.id).select('-password'); // .select('-password') excludes the password
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
